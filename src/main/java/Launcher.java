@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 /**
@@ -15,10 +16,15 @@ public class Launcher {
     // Search
 
 
-    public static void main(String[] args) throws IOException {
-        ArrayList<Stops> stopsList = Format.stopsFormat();
+    public static void main(String[] args) throws IOException, ParseException {
+        //ArrayList<Stops> stopsList = Format.stopsFormat();
         //System.out.println(stopsList);
-        ArrayList<Routes> routesList = Format.routesFormat();
-        Stops.searchById(stopsList, 2075);
+        //ArrayList<Routes> routesList = Format.routesFormat();
+        //ArrayList<stopTimes> stopTimesList = Format.stopTimesFormat();
+        //System.out.println(stopTimesList);
+        ArrayList<Trips> tripsList = Format.tripsFormat();
+        System.out.println(tripsList);
+        //Stops.searchById(stopsList, 2075);
+
     }
 }
