@@ -22,8 +22,10 @@ public class Launcher {
         //ArrayList<Routes> routesList = Format.routesFormat();
         //ArrayList<stopTimes> stopTimesList = Format.stopTimesFormat();
         //System.out.println(stopTimesList);
-        ArrayList<Trips> tripsList = Format.tripsFormat();
-        System.out.println(tripsList);
+        //ArrayList<Trips> tripsList = Format.tripsFormat();
+        //System.out.println(tripsList);
+        ArrayList<Transfers> transfersList = Format.transfersFormat();
+        System.out.println(transfersList);
         //Stops.searchById(stopsList, 2075);
 
     }
