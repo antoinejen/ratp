@@ -51,12 +51,25 @@ public class Stops {
         return "\n Line=" + getLine() + "::ID=" + getId() + "::Name" + getName() + "::Latitude=" + getLatitude() + "::Longitude=" + getLongitude();
     }
 
-    public static void searchById(ArrayList<Stops> stopsList, int id) {
+    public static boolean searchById(ArrayList<Stops> stopsList, int id) {
+        boolean b = false;
         for (Stops s : stopsList) {
             if (s.getName() != null && s.getId() == id) {
                 System.out.println(s);
+                b = true;
             }
         }
+        return b;
+    }
+
+    public static boolean isMetroStation(ArrayList<Stops> stopsList, int id) {
+        boolean b = false;
+        for (Stops s : stopsList) {
+            if (s.getName() != null && s.getId() == id) {
+                b = true;
+            }
+        }
+        return b;
     }
 
     public static void searchByName(ArrayList<Stops> stopsList, String name) {
@@ -79,6 +92,6 @@ public class Stops {
             }
             if (!isDuplicated) noDuplicates.add(s);
         }
-        System.out.println(noDuplicates);
+        //System.out.println(noDuplicates);
     }
 }
