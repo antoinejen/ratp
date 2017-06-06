@@ -4,14 +4,34 @@ import java.util.*;
  * Created by antoine on 05/06/17.
  */
 public class Edge {
-    private int from;
-    private int to;
-    private Double weight;
+    public int from;
+    public int to;
+    public double weight;
 
     public Edge(int from, int to, Double weight) {
         this.from = from;
         this.to = to;
         this.weight = weight;
+    }
+
+    public int getFrom() {
+        return from;
+    }
+
+    public void setFrom(int from) {
+        this.from = from;
+    }
+
+    public int getTo() { return to; }
+
+    public void setTo(int to) { this.to = to; }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.from = from;
     }
 
     @Override
@@ -38,6 +58,11 @@ public class Edge {
     public static void mergetoOneLine (List<Integer> oneDirection, List<Integer> otherDirection) {
         oneDirection.addAll(otherDirection);
     }
+
+    public static void mergetoOneLineString (List<String> oneDirection, List<String> otherDirection) {
+        oneDirection.addAll(otherDirection);
+    }
+
 
     public static List<String> getLines(List<Integer> direction) {
         List<String> lines = new ArrayList<>();

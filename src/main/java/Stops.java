@@ -51,15 +51,36 @@ public class Stops {
         return "\n Line=" + getLine() + "::ID=" + getId() + "::Name" + getName() + "::Latitude=" + getLatitude() + "::Longitude=" + getLongitude();
     }
 
-    public static boolean searchById(ArrayList<Stops> stopsList, int id) {
-        boolean b = false;
+    public static void searchById(ArrayList<Stops> stopsList, int id) {
+        //boolean b = false;
         for (Stops s : stopsList) {
             if (s.getName() != null && s.getId() == id) {
                 System.out.println(s);
-                b = true;
+                //b = true;
             }
         }
-        return b;
+        //return b;
+    }
+
+    public static double[] getCoordinates(ArrayList<Stops> stopsList, int id) {
+        double[] coordinates = new double[2];
+        for (Stops s : stopsList) {
+            if (s.getName() != null && s.getId() == id) {
+                coordinates[0] = s.getLatitude();
+                coordinates[1] = s.getLongitude();
+            }
+        }
+        return coordinates;
+    }
+
+    public static String getNameByid(ArrayList<Stops> stopsList, int id) {
+        String name = "";
+        for (Stops s : stopsList) {
+            if (s.getName() != null && s.getId() == id) {
+                name = s.getName();
+            }
+        }
+        return name;
     }
 
     public static boolean isMetroStation(ArrayList<Stops> stopsList, int id) {
