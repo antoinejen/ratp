@@ -1,4 +1,8 @@
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by antoine on 05/06/17.
@@ -47,4 +51,17 @@ public class stopTimes {
         return "\nID=" + getTrip_id() + "::Arrival Date=" + getArrival_date() + "::Departure Date=" + getDeparture_date() + "::Stop ID=" + getStop_id();
     }
 
+    public static void searchDuplicates(ArrayList<stopTimes> stopTimesList) {
+        ArrayList<stopTimes> noDuplicates = new ArrayList<>();
+        for (stopTimes s: stopTimesList) {
+            boolean isDuplicated = false;
+            for (stopTimes t : noDuplicates) {
+                if (t.getStop_id() == (s.getStop_id())) {
+                        isDuplicated = true;
+                }
+            }
+            if (!isDuplicated) noDuplicates.add(s);
+        }
+        System.out.println(noDuplicates);
+    }
 }

@@ -13,7 +13,7 @@ public class Format {
         Charset charset = Charset.forName("UTF-8");
         List<String> list = new ArrayList<String>();
         String root = "/home/antoine/Bureau/Métro Paris/";
-        List<Stops> stopsList = new ArrayList<>();
+        ArrayList<Stops> stopsList = new ArrayList<>();
         for (int i = 1; i <= 16; i++) { // Stockage de toutes les lignes de métro, station par station (en "ligne")
             final String ligne;
             if (i == 15) { // Cas métro 3bis
@@ -44,6 +44,13 @@ public class Format {
                 // use comma as separator
                 String[] cols = line.split(",");
                 Stops stop = new Stops();
+                if (i == 15) { // Cas métro 3bis
+                    stop.setLine("3b");
+                } else if (i == 16) { // cas métro 7bis
+                    stop.setLine("7b");
+                } else { // cas métro 1 à 14
+                    stop.setLine(Integer.toString(i));
+                }
                 scanner = new Scanner(line);
                 scanner.useDelimiter(",");
                 while (scanner.hasNext()) {
@@ -66,9 +73,10 @@ public class Format {
             reader.close();
 
             stopsList = new ArrayList<Stops>(new LinkedHashSet<Stops>(stopsList)); // Antiduplicat exact, ne marche pas quand les id d'une même station sont différents
+            Stops.searchDuplicates(stopsList); // Vrai antiduplicat; les doublons de stations de la même ligne sont effacées, mais pas ceux de lignes différentes
 
         }
-        return (ArrayList<Stops>) stopsList;
+        return stopsList;
     }
 
     public static ArrayList<Routes> routesFormat() throws IOException {
@@ -141,15 +149,15 @@ public class Format {
 
         for (int i = 1; i <= 1; i++) { // Stockage des informations d'une ligne de métro
             final String ligne;
-            /*if (i == 15) { // Cas métro 3bis
+            if (i == 15) { // Cas métro 3bis
                 ligne = "RATP_GTFS_METRO_3b";
             } else if (i == 16) { // cas métro 7bis
                 ligne = "RATP_GTFS_METRO_7b";
             } else { // cas métro 1 à 14
-                */ligne = "RATP_GTFS_METRO_" + String.valueOf(i);
-            /*}*/
+                ligne = "RATP_GTFS_METRO_" + String.valueOf(i);
+            }
 
-            FileInputStream is = new FileInputStream(root + ligne + "/stop_times.txt");
+            FileInputStream is = new FileInputStream("/stop_times.txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset));
 
             // read file line by line
@@ -197,6 +205,62 @@ public class Format {
         }
         return (ArrayList<stopTimes>) stopTimesList;
     }
+
+    public static HashMap<Integer, ArrayList<Integer>> edgeLine() throws IOException, ParseException {
+        // open file input stream
+        Charset charset = Charset.forName("UTF-8");
+        String root = "/home/antoine/Bureau/Métro Paris/";
+        HashMap<Integer, ArrayList<Integer>> stationsListPerLine = new HashMap<>(16);
+        ArrayList<Integer> stationsList = new ArrayList<>();
+        ArrayList<Integer> noDuplicates = new ArrayList<>();
+        for (int i = 1; i <= 16; i++) { // Stockage des informations d'une ligne de métro
+            final String ligne;
+            if (i == 15) { // Cas métro 3bis
+                ligne = "RATP_GTFS_METRO_3b";
+            } else if (i == 16) { // cas métro 7bis
+                ligne = "RATP_GTFS_METRO_7b";
+            } else { // cas métro 1 à 14
+                ligne = "RATP_GTFS_METRO_" + String.valueOf(i);
+            }
+
+            FileInputStream is = new FileInputStream(root + ligne + "/stop_times.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset));
+
+            // read file line by line
+            String line = null;
+            Scanner scanner = null;
+            int index = 0;
+
+            int iteration = 0;
+
+            while ((line = reader.readLine()) != null) { // lecture de chaque ligne du fichier
+                if (iteration == 0) { // on saute la première ligne, qui contient le nom de chaque colonne
+                    iteration++;
+                    continue;
+                }
+                // use comma as separator
+                String[] cols = line.split(",");
+                scanner = new Scanner(line);
+                scanner.useDelimiter(",");
+                while (scanner.hasNext()) {
+                    String data = scanner.next();
+                    if (!stationsList.contains(Integer.parseInt(cols[3]))) {
+                        stationsList.add(Integer.parseInt(cols[3])); // colonne stop_id
+                    }
+                }
+            }
+            //System.out.println(stationsList);
+            stationsListPerLine.put(i, stationsList);
+            stationsList = new ArrayList<Integer>();
+
+            //close reader
+            reader.close();
+            //stopTimesList = new ArrayList<stopTimes>(new LinkedHashSet<stopTimes>(stopTimesList)); // Antiduplicat exact, ne marche pas quand les id d'une même station sont différents
+
+        }
+        return stationsListPerLine;
+    }
+
 
     public static ArrayList<Trips> tripsFormat() throws IOException, ParseException {
         // open file input stream
