@@ -13,9 +13,12 @@ public class Launcher {
         ArrayList<Stops> stopsList = Format.stopsFormat();
         //System.out.println(stopsList);
         HashMap<Integer, ArrayList<Integer>> stationsListPerLine = Format.edgeLine();
-        //System.out.println(stationsListPerLine);
+        System.out.println(stationsListPerLine.get(7));
+        System.out.println(stationsListPerLine.get(13));
         List<Integer> intraEdges = new ArrayList<Integer>();
         List<String> finalIntraEdges = new ArrayList<String>();
+
+        //Création des connexions entre les stations d'une même ligne (erreurs sur les lignes à fourche: lignes 7 et 13
         for (Integer key : stationsListPerLine.keySet()) {
             List<Integer> oneDirection = Edge.oneDirection(stationsListPerLine.get(key)); // Un sens d'une ligne
             List<String> finalOneDirection = Edge.getLines(oneDirection);
@@ -29,7 +32,13 @@ public class Launcher {
         //System.out.println(finalIntraEdges);
         ArrayList<Transfers> transfersList = Format.transfersFormat();
         List<String> transfers = Edge.getTransfers(stopsList, transfersList);
-        //System.out.println(transfers);
+
+        // Partie 1.6 Unweighted graph
+        Graph metro = new Graph(finalIntraEdges, transfers);
+        //System.out.println("Métro: ");
+        //metro.print(); // Affichage du métro en graphe
+
+
         // Partie 1.7 Weighted graph
         List<Edge> intraListEdge = new ArrayList<>(finalIntraEdges.size()); // Intra-stations
         List<Edge> interListEdge = new ArrayList<>(transfers.size()); // Correspondances
@@ -44,7 +53,6 @@ public class Launcher {
             double euclidian = GraphWeighted.euclidianDistance(coordinates1, coordinates2);
             intraListEdge.add(new Edge(Integer.parseInt(nodesNumber[0]), Integer.parseInt(nodesNumber[1]), euclidian));
         }
-        //System.out.println(intraListEdge);
 
         // interListEdge
         for (int i = 0; i < transfers.size();i++) {
@@ -58,16 +66,27 @@ public class Launcher {
         ArrayList<Edge> finalAdjWeighted = new ArrayList<>(intraListEdge);
         //System.out.println(finalAdjWeighted);
 
-        //System.out.println(Stops.getNameByid(stopsList, 2035));
 
+        // Calcul du diamètre du graphe unweighted à partir du noeud 1964, choix arbitraire
+        /*Stops.searchById(stopsList, 1964); // Châtelet, ligne 4
+        metro.breadFirstSearch(1964); // Le dernier est 2284
+        Stops.searchById(stopsList, 2284); // Guy-Môquet, ligne 13
+        metro.breadFirstSearch(2284); // Le dernier est 2347
+        Stops.searchById(stopsList, 2347);
+        metro.breadFirstSearchForShortestPath(2284,2347, stopsList);*/
 
-        //Graph metro = new Graph(finalIntraEdges, transfers);
-        //System.out.println("Métro: ");
-        //metro.print(); // Affichage du métro en graphe
-
-        GraphWeighted metroWeighted = new GraphWeighted(finalIntraEdges, transfers, finalAdjWeighted);
+        //GraphWeighted metroWeighted = new GraphWeighted(finalIntraEdges, transfers, finalAdjWeighted);
         //System.out.println("Métro Weighted: ");
         //metroWeighted.print(); // Affichage du métro en graphe
+
+        for (int i = 0; i < transfers.size();i++) {
+            String[] nodesNumber = transfers.get(i).split(" ");
+            coordinates1 = Stops.getCoordinates(stopsList, Integer.parseInt(nodesNumber[0]));
+            coordinates2 = Stops.getCoordinates(stopsList, Integer.parseInt(nodesNumber[1]));
+            double euclidian = GraphWeighted.euclidianDistance(coordinates1, coordinates2);
+            interListEdge.add(new Edge(Integer.parseInt(nodesNumber[0]), Integer.parseInt(nodesNumber[1]), euclidian));
+        }
+        //System.out.println(interListEdge);
 
         //3. Shortest paths - BFS
 
@@ -75,7 +94,7 @@ public class Launcher {
 
         //3. Shortest paths - Dijkstra
 
-        metroWeighted.dijkstra(2487, 2208, stopsList);
+        //metroWeighted.dijkstra(2487, 2208, stopsList);
 
 
 

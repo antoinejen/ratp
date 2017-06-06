@@ -59,6 +59,29 @@ public class Graph {
         }
     }
 
+    public void breadFirstSearch(int sourceNode) throws InterruptedException {
+        Queue<Integer> queue = new Queue();
+        HashSet<Integer> visited = new HashSet<>();
+        visited.add(sourceNode);
+        queue.enqueue(sourceNode);
+        while (!queue.isEmpty()) {
+            int nodeIndex = queue.dequeue();
+            List<Integer> neighbours = adj[nodeIndex];
+            if (!visited.contains(nodeIndex)) {
+                System.out.println("Visiting: " + nodeIndex);
+                visited.add(nodeIndex);
+            }
+            if (neighbours != null) {
+                for (int neighbour : neighbours) {
+                    if (!visited.contains(neighbour)) {
+                        queue.enqueue(neighbour);
+                    }
+                }
+            }
+        }
+    }
+
+
     public int breadFirstSearchForShortestPath(int sourceNode,
                                                int targetNode, ArrayList<Stops> stopsList) throws InterruptedException {
         Stops.searchById(stopsList, sourceNode);
